@@ -1,27 +1,25 @@
 async function setup() {
-    const patchExportURL = "patch.export.json";
-    const WAContext = window.AudioContext || window.webkitAudioContext;
-    const context = new WAContext();
+    const patchExportURL = "patch.export.json"; // path to the patch export json from RNBO
+    const WAContext = window.AudioContext || window.webkitAudioContext; // audio context or webkit audio context for different age browsers
+    const context = new WAContext(); // creating the new audio context
 
-    const outputNode = context.createGain();
-    outputNode.connect(context.destination);
+    const outputNode = context.createGain(); // creating a gain node
+    outputNode.connect(context.destination); // connecting the gain node to the output of the audio context
 
     try {
+        //grab the JSON file and access it as json
         const response = await fetch(patchExportURL);
         const patcher = await response.json();
 
+        //create the RNBO device within the audio context
         const device = await RNBO.createDevice({ context, patcher });
+        //connect the RNBO device to the gain node which connects to output
         device.node.connect(outputNode);
 
-            // (Optional) Automatically create sliders for the device parameters
-    makeSliders(device);
+        // attach the freq slider to the RNBO device
+        attachFreqSlider(device);
 
-    // (Optional) Create a form to send messages to RNBO inputs
-    // makeInportForm(device);
-
-    // (Optional) Attach listeners to outports so you can log messages from the RNBO patcher
-    // attachOutports(device);
-
+        //resume Audio Context on a click on the body
         document.body.onclick = () => context.resume();
 
     } catch (err) {
@@ -29,40 +27,20 @@ async function setup() {
     }
 }
 
-function makeSliders(device) {
+function attachFreqSlider(device) {
     let freqSlider = document.getElementById("freqSlider");
-    let isDraggingSlider = false;
 
     // Check if the 'freq' parameter exists
     const param = device.parametersById.get("freq");
-    if (!param) {
-        console.error("'freq' parameter not found in RNBO device");
-        return; // Exit the function if the parameter doesn't exist
-    }
 
-
+    // attaching to the RNBO param
     freqSlider.addEventListener("input", () => {
         let value = Number.parseFloat(freqSlider.value);
         param.value = value; // Set the RNBO parameter value
     });
 
-    // Update slider value on pointer events
-    freqSlider.addEventListener("pointerdown", () => {
-        isDraggingSlider = true;
-    });
-
-    freqSlider.addEventListener("pointerup", () => {
-        isDraggingSlider = false;
-        freqSlider.value = param.value;
-    });
-
-    // Optional: Listen to parameter changes from the device to update the slider
-    device.parameterChangeEvent.subscribe(updatedParam => {
-        if (!isDraggingSlider && updatedParam.id === param.id) {
-            freqSlider.value = updatedParam.value;
-        }
-    });
 }
 
+// run the setup 
 setup();
 
