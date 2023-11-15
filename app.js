@@ -4,7 +4,9 @@ async function setup() {
     const context = new WAContext(); // creating the new audio context
 
     const outputNode = context.createGain(); // creating a gain node
+    outputNode.gain.value = 0.3;
     outputNode.connect(context.destination); // connecting the gain node to the output of the audio context
+    attachGainSlider(outputNode, context);
 
     try {
         //grab the JSON file and access it as json
@@ -40,6 +42,19 @@ function attachFreqSlider(device) {
     });
 
 }
+
+function attachGainSlider(outputNode, context) {
+    let gainSlider = document.getElementById('gainSlider');
+
+    gainSlider.addEventListener('input', () => {
+        let value = parseFloat(gainSlider.value);
+        outputNode.gain.linearRampToValueAtTime(value, context.currentTime + 0.01); // Smooth transition
+    });
+
+    gainSlider.value = outputNode.gain.value;
+}
+
+
 
 // run the setup 
 setup();

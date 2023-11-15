@@ -15,9 +15,19 @@ body {
 #parameters {
     width: 100%; /* Make the parameters div take the full width of its parent */
     display: flex;
-    justify-content: center; /* Center its children */
+    flex-direction: column; /* Arrange children in a column */
+    align-items: center; /* Align children in the center */
+    justify-content: center; /* Center its children vertically */
 }
 
-#freqSlider {
-    width: 80%; /* Set the slider width to 80% of its parent */
+/* Styling for labels and range inputs */
+label, input[type="range"] {
+    display: block; /* Make each element take the full width of its container */
+    margin: 10px 0; /* Add some space around each element */
+    text-align: left; /* Align the text of the label to the left */
+}
+
+input[type="range"] {
+    width: 80%; /* Set a specific width for the sliders */
+    margin: 5px auto; /* Center the sliders and add some vertical space */
 }

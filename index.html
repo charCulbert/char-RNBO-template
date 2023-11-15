@@ -2,16 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>charboogieboogie</title>
+    <title>RNBO osc</title>
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="https://cdn.cycling74.com/rnbo/latest/rnbo.min.js"></script>
 
 </head>
 <body>
-    <h1>charboog</h1>
+    <h1>RNBO osc webAudio api
+    
+    </h1>
     <div id="app-container">
         <div id="parameters">
+        <label for="gainSlider">Gain:</label>
+        <input type="range" id="gainSlider" min="0" max="0.4" step="0.001" />
+
+        <label for="freqSlider">Frequency:</label>
         <input type="range" id="freqSlider" min="100" max="200" value="150">
+
         </div>
         <!-- You can add more elements as needed -->
     </div>
